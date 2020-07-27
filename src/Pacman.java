@@ -87,7 +87,7 @@ public class Pacman extends Thread {
         enemyList.add(this.enemyPawn4);
 
     }
-    //posizione dei nemici col numero assegnato 3
+
     private void setEnemyPosition (){
         this.grid[enemyPawn1.getX()][enemyPawn1.getY()] =  3;
         this.grid[enemyPawn2.getX()][enemyPawn2.getY()] =  3;
@@ -105,17 +105,16 @@ public class Pacman extends Thread {
 
         for (int i = 0; i < this.enemyList.size(); i ++){
             double value = Math.random();
-            System.out.println(value);
 
             //destra
             if (value < 0.25) {
-                //Se va fuori
+                //Se va fuori dal confine di gioco
                 if(this.enemyList.get(i).getY() + 1 >= this.ySize){
                     this.grid [this.enemyList.get(i).getX()][this.enemyList.get(i).getY()] = this.lastEnemyPositionList.get(i);
                     this.lastEnemyPositionList.add(i,  this.grid [this.enemyList.get(i).getX()][0]);
                     this.enemyList.get(i).setY(0);
                 }
-
+                //se incontra il giocatore
                 else if (this.grid[this.enemyList.get(i).getX()][this.enemyList.get(i).getY() +1] == 5){
                     this.grid[this.enemyList.get(i).getX()][this.enemyList.get(i).getY()] =  this.lastEnemy1Position;
                     this.enemyList.get(i).setY(this.enemyList.get(i).getY() + 1);
@@ -211,7 +210,7 @@ public class Pacman extends Thread {
     public void run(){
         while ( status == Status.IN_GAME){
             try {
-                Thread.sleep(3000);
+                Thread.sleep(2000);
                 move();
                 this.enemyMove();
                 System.out.println(this.toString());
@@ -242,8 +241,11 @@ public class Pacman extends Thread {
 
 
     public void move (){
+
+        //destra
         if (this.currentMove.equalsIgnoreCase("d")){
 
+            //se la pedina va fuori dal confinea
             if (this.playerPawn.getY() + 1 >= this.ySize){
                 this.grid [playerPawn.getX()] [playerPawn.getY()] = 2;
                 this.playerPawn.setY(0);
@@ -253,6 +255,7 @@ public class Pacman extends Thread {
                 this.status = Status.LOSE;
             }
             if (this.grid [playerPawn.getX()] [playerPawn.getY() + 1] != 1){
+                //se trova il cibo
                 if (this.grid [playerPawn.getX()] [playerPawn.getY() + 1] == 0){
                     this.foodCounter --;
                     this.score += 10;
@@ -263,6 +266,8 @@ public class Pacman extends Thread {
             }
         }
 
+
+        //sinistra
         if (this.currentMove.equalsIgnoreCase("a")){
             if (this.playerPawn.getY() - 1 < 0){
                 this.grid [playerPawn.getX()] [playerPawn.getY()] = 2;
@@ -286,6 +291,8 @@ public class Pacman extends Thread {
             }
         }
 
+
+        //sotto
         if (this.currentMove.equalsIgnoreCase("s")){
             if (this.playerPawn.getX() + 1 >= this.xSize){
                 this.grid [playerPawn.getX()] [playerPawn.getY()] = 2;
@@ -305,6 +312,8 @@ public class Pacman extends Thread {
             }
         }
 
+
+        //sopra
         if (this.currentMove.equalsIgnoreCase("w")){
             if (this.playerPawn.getX() - 1 < 0){
                 this.grid [playerPawn.getX()] [playerPawn.getY()] = 2;
@@ -367,9 +376,10 @@ public class Pacman extends Thread {
                 }
             } while (character != -1);
 
-        }  catch (Exception e) { }
+        }  catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-
     public String toString (){
         String result= "";
         for (int i = 0; i < this.grid.length; i ++){
